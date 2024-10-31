@@ -37,19 +37,19 @@ protocol AbstractOperation {
 }
 
 class Calculator {
-    let addCalculator: AbstractOperation
-    let subCalculator: AbstractOperation
-    let mulCalculator: AbstractOperation
-    let divCalculator: AbstractOperation
+    let addOperation: AbstractOperation
+    let subOperation: AbstractOperation
+    let mulOperation: AbstractOperation
+    let divOperation: AbstractOperation
     
-    init(addCalculator: AbstractOperation,
+    init(addOperation: AbstractOperation,
          subCalculator: AbstractOperation,
          mulCalculator: AbstractOperation,
          divCalculator: AbstractOperation) {
-        self.addCalculator = addCalculator
-        self.subCalculator = subCalculator
-        self.mulCalculator = mulCalculator
-        self.divCalculator = divCalculator
+        self.addOperation = addOperation
+        self.subOperation = subCalculator
+        self.mulOperation = mulCalculator
+        self.divOperation = divCalculator
     }
 }
 
@@ -108,18 +108,18 @@ final class DivideOperation: AbstractOperation {
 
 let formatter = Formatter()
 
-let addCalculator = AddOperation(formatter: formatter)
+let addOperation = AddOperation(formatter: formatter)
 let subCalculator = SubtractOperation(formatter: formatter)
 let mutCalculator = MultiplyOperation(formatter: formatter)
 let divCalculator = DivideOperation(formatter: formatter)
 
 let calculator = Calculator(
-    addCalculator: addCalculator,
+    addOperation: addOperation,
     subCalculator: subCalculator,
     mulCalculator: mutCalculator,
     divCalculator: divCalculator)
 
-print(calculator.addCalculator.calculate(firstNumber: 12341234, secondNumber: 10.99999))
-print(calculator.subCalculator.calculate(firstNumber: 123, secondNumber: -12345))
-print(calculator.mulCalculator.calculate(firstNumber: 7, secondNumber: 3.2))
-print(calculator.divCalculator.calculate(firstNumber: 10, secondNumber: 0))
+print(calculator.addOperation.calculate(firstNumber: 12341234, secondNumber: 10.99999))
+print(calculator.subOperation.calculate(firstNumber: 123, secondNumber: -12345))
+print(calculator.mulOperation.calculate(firstNumber: 7, secondNumber: 3.2))
+print(calculator.divOperation.calculate(firstNumber: 10, secondNumber: 0))
