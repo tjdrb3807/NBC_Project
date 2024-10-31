@@ -6,7 +6,6 @@ enum Operator {
     case mul
     case div
     case rem
-    case none
 }
 
 class Calculator {
@@ -34,6 +33,12 @@ final class SubtractOperation: Calculator {
     func calculate(firstNumber: Double, secondNumber: Double) -> String { setNumberFormatter(number: firstNumber - secondNumber) }
 }
 
+final class MultiplyOperation: Calculator {
+    init() { super.init(operatorCase: .mul) }
+    
+    func calculate(firstNumber: Double, secondNumber: Double) -> String { setNumberFormatter(number: firstNumber * secondNumber) }
+}
+
 final class DivideOperation: Calculator {
     init() { super.init(operatorCase: .div) }
     
@@ -46,12 +51,15 @@ final class DivideOperation: Calculator {
 
 let addCalculator = AddOperation()
 let subCalculator = SubtractOperation()
+let mulCalculator = MultiplyOperation()
 let divCalculator = DivideOperation()
 
 let addResult = addCalculator.calculate(firstNumber: 100, secondNumber: -333333330.011)
 let subResult = subCalculator.calculate(firstNumber: -100.2, secondNumber: -100.1)
+let mulResult = mulCalculator.calculate(firstNumber: 0.2, secondNumber: -300.0)
 let divResult = divCalculator.calculate(firstNumber: 100, secondNumber: 7.1)
 
 print(addResult)
 print(subResult)
+print(mulResult)
 print(divResult)
