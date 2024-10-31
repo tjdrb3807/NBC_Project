@@ -1,6 +1,6 @@
 # NBC_Calculator
 
-![Thumbnail Image](/Image/thumbnailImage.png)
+![Thumbnail Image](./Image/thumbnailImage.png)
 
 ## Stacks
 
