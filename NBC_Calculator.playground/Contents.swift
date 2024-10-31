@@ -27,7 +27,7 @@ enum Operator {
     }
 }
 
-final class Calculator {
+class Calculator {
     private func setNumberFormatter(number: Double) -> String {
         let numberFormatter = NumberFormatter()
         numberFormatter.numberStyle = .decimal
@@ -58,6 +58,22 @@ final class Calculator {
         
         return setNumberFormatter(number: resultValue)
     }
+}
+
+final class AddOperation: Calculator {
+    
+}
+
+final class SubtractOperator: Calculator {
+    
+}
+
+final class MultiplyOperator: Calculator {
+    
+}
+
+final class DivideOperation: Calculator {
+    
 }
 
 let calculator = Calculator()
