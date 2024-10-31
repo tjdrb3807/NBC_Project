@@ -5,6 +5,7 @@ enum Operator {
     case sub
     case mul
     case div(secondNumber: Double, description: String)
+    case rem
     case none(description: String)
     
     
@@ -18,6 +19,8 @@ enum Operator {
             self = .mul
         case "/":
             self = .div(secondNumber: 0.0, description: "It cannot be divided by zero.")
+        case "%":
+            self = .rem
         default:
             self = .none(description: "This operator is not supported.")
         }
@@ -39,6 +42,8 @@ final class Calculator {
             return description
         case .div(_, _):
             return firstNumber / secondNumber
+        case .rem:
+            return firstNumber.truncatingRemainder(dividingBy: secondNumber)
         case .none(let description):
             return description
         }
@@ -51,9 +56,11 @@ let addResult = calculator.calculate(operator: "+", firstNumber: 10, secondNumbe
 let subResult = calculator.calculate(operator: "-", firstNumber: 10, secondNumber: 10)
 let mulResult = calculator.calculate(operator: "*", firstNumber: 10, secondNumber: 10)
 let divResult = calculator.calculate(operator: "/", firstNumber: 10, secondNumber: 10)
+let remResult = calculator.calculate(operator: "%", firstNumber: 10, secondNumber:10)
 
 print(noneCaseResult)
 print("Add result: \(addResult)")
 print("Subtract result: \(subResult)")
 print("Multiply result: \(mulResult)")
 print("Divide result: \(divResult)")
+print("Remaining result: \(remResult)")
