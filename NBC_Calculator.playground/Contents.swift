@@ -4,27 +4,9 @@ enum Operator {
     case add
     case sub
     case mul
-    case div(secondNumber: Double, description: String)
+    case div
     case rem
-    case none(description: String)
-    
-    
-    init?(rawValue: String) {
-        switch rawValue {
-        case "+":
-            self = .add
-        case "-":
-            self = .sub
-        case "*":
-            self = .mul
-        case "/":
-            self = .div(secondNumber: 0.0, description: "It cannot be divided by zero.")
-        case "%":
-            self = .rem
-        default:
-            self = .none(description: "This operator is not supported.")
-        }
-    }
+    case none
 }
 
 class Calculator {
