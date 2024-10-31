@@ -8,11 +8,11 @@ enum Operator {
     case rem
 }
 
-class Calculator {
-    let operatorCase: Operator
-    
-    init(operatorCase: Operator) { self.operatorCase = operatorCase }
-    
+protocol AbstractFormatter {
+    func setNumberFormatter(number: Double) -> String
+}
+
+final class Formatter: AbstractFormatter {
     func setNumberFormatter(number: Double) -> String {
         let numberFormatter = NumberFormatter()
         numberFormatter.numberStyle = .decimal
@@ -21,45 +21,87 @@ class Calculator {
     }
 }
 
-final class AddOperation: Calculator {
-    init() { super.init(operatorCase: .add) }
+protocol AbstractOperation {
+    var formatter: AbstractFormatter { get }
     
-    func calculate(firstNumber: Double, secondNumber: Double) -> String { setNumberFormatter(number: firstNumber + secondNumber) }
+    func calculate(firstNumber: Double, secondNumber: Double) -> String
 }
 
-final class SubtractOperation: Calculator {
-    init() { super.init(operatorCase: .sub) }
+class Calculator {
+    let addCalculator: AbstractOperation
+    let subCalculator: AbstractOperation
+    let mulCalculator: AbstractOperation
+    let divCalculator: AbstractOperation
     
-    func calculate(firstNumber: Double, secondNumber: Double) -> String { setNumberFormatter(number: firstNumber - secondNumber) }
+    init(addCalculator: AbstractOperation,
+         subCalculator: AbstractOperation,
+         mulCalculator: AbstractOperation,
+         divCalculator: AbstractOperation) {
+        self.addCalculator = addCalculator
+        self.subCalculator = subCalculator
+        self.mulCalculator = mulCalculator
+        self.divCalculator = divCalculator
+    }
 }
 
-final class MultiplyOperation: Calculator {
-    init() { super.init(operatorCase: .mul) }
+final class AddOperation: AbstractOperation {
+    internal let formatter: AbstractFormatter
     
-    func calculate(firstNumber: Double, secondNumber: Double) -> String { setNumberFormatter(number: firstNumber * secondNumber) }
+    init(formatter: AbstractFormatter) {
+        self.formatter = formatter
+    }
+    
+    func calculate(firstNumber: Double, secondNumber: Double) -> String { formatter.setNumberFormatter(number: firstNumber + secondNumber) }
 }
 
-final class DivideOperation: Calculator {
-    init() { super.init(operatorCase: .div) }
+final class SubtractOperation: AbstractOperation {
+    internal let formatter: AbstractFormatter
+    
+    init(formatter: AbstractFormatter) {
+        self.formatter = formatter
+    }
+    
+    func calculate(firstNumber: Double, secondNumber: Double) -> String { formatter.setNumberFormatter(number: firstNumber - secondNumber) }
+}
+
+final class MultiplyOperation: AbstractOperation {
+    internal let formatter: AbstractFormatter
+    
+    init(formatter: AbstractFormatter) {
+        self.formatter = formatter
+    }
+    
+    func calculate(firstNumber: Double, secondNumber: Double) -> String { formatter.setNumberFormatter(number: firstNumber * secondNumber) }
+}
+
+final class DivideOperation: AbstractOperation {
+    internal let formatter: AbstractFormatter
+    
+    init(formatter: AbstractFormatter) {
+        self.formatter = formatter
+    }
     
     func calculate(firstNumber: Double, secondNumber: Double) -> String {
         guard secondNumber != 0 else { return "It cannot be divided by zero." }
         
-        return setNumberFormatter(number: firstNumber / secondNumber)
+        return formatter.setNumberFormatter(number: firstNumber / secondNumber)
     }
 }
 
-let addCalculator = AddOperation()
-let subCalculator = SubtractOperation()
-let mulCalculator = MultiplyOperation()
-let divCalculator = DivideOperation()
+let formatter = Formatter()
 
-let addResult = addCalculator.calculate(firstNumber: 100, secondNumber: -333333330.011)
-let subResult = subCalculator.calculate(firstNumber: -100.2, secondNumber: -100.1)
-let mulResult = mulCalculator.calculate(firstNumber: 0.2, secondNumber: -300.0)
-let divResult = divCalculator.calculate(firstNumber: 100, secondNumber: 7.1)
+let addCalculator = AddOperation(formatter: formatter)
+let subCalculator = SubtractOperation(formatter: formatter)
+let mutCalculator = MultiplyOperation(formatter: formatter)
+let divCalculator = DivideOperation(formatter: formatter)
 
-print(addResult)
-print(subResult)
-print(mulResult)
-print(divResult)
+let calculator = Calculator(
+    addCalculator: addCalculator,
+    subCalculator: subCalculator,
+    mulCalculator: mutCalculator,
+    divCalculator: divCalculator)
+
+print(calculator.addCalculator.calculate(firstNumber: 10, secondNumber: 10))
+print(calculator.subCalculator.calculate(firstNumber: 10, secondNumber: 10))
+print(calculator.mulCalculator.calculate(firstNumber: 10, secondNumber: 10))
+print(calculator.divCalculator.calculate(firstNumber: 10, secondNumber: 0))
