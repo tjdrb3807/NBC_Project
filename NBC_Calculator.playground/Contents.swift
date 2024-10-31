@@ -46,7 +46,16 @@ final class AddOperation: Calculator {
     func calculate(firstNumber: Double, secondNumber: Double) -> String { setNumberFormatter(number: firstNumber + secondNumber) }
 }
 
+final class SubtractOperation: Calculator {
+    init() { super.init(operatorCase: .sub) }
+    
+    func calculate(firstNumber: Double, secondNumber: Double) -> String { setNumberFormatter(number: firstNumber - secondNumber) }
+}
+
 let addCalculator = AddOperation()
+let subCalculator = SubtractOperation()
 let addResult = addCalculator.calculate(firstNumber: 100, secondNumber: -333333330.011)
+let subResult = subCalculator.calculate(firstNumber: -100.2, secondNumber: -100.1)
 
 print(addResult)
+print(subResult)
