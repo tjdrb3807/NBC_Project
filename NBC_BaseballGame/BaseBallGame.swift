@@ -20,9 +20,23 @@ enum InvalidAnswer: String {
     case notFirstZero = "첫 번째 자리에 0은 입력할 수 없습니다.\n"
 }
 
+enum GameOption: Int {
+    case start = 1
+    case record
+    case exit
+}
+
+enum InvalidOption: String {
+    case notOneDigits = "한 자리 숫자만 입력해주세요.\n"
+    case notInteger = "숫자만 입력해주세요\n"
+    case notOption = "지원하지 않는 기능(숫자)입니다.\n"
+}
+
 import Foundation
 
 final class BaseBallGame {
+    var selectedOption: GameOption?
+    
     var answer: [Int] = []
     var enteredAnswer: [Int] = []
     
@@ -102,6 +116,37 @@ final class BaseBallGame {
         }
         
         return nil
+    }
+    
+    private func startIntro() {
+        print("환영합니다! 원하시는 번호를 입력해주세요.")
+        
+        let _ = { [weak self] in
+            while true {
+                print("1. 게임 시작하기    2. 게임 기록 보기    3. 종료하기")
+                
+                let strOption = readLine()!
+                guard let option = Int(strOption) else {
+                    print(InvalidOption.notInteger.rawValue)
+                    
+                    continue
+                }
+                guard option / 10 == 0 else {
+                    print(InvalidOption.notOneDigits.rawValue)
+                    
+                    continue
+                }
+                guard option == 1 || option == 2 || option == 3 else {
+                    print(InvalidOption.notOption.rawValue)
+                    
+                    continue
+                }
+                
+                self?.selectedOption = GameOption(rawValue: option)
+                
+                break
+            }
+        }()
     }
     
     private func startInning() -> Hint {
