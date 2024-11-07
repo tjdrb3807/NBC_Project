@@ -187,7 +187,7 @@ extension BaseBallGame {
     func isDuplicate(_ arr: String) -> Bool {
         let sortedArr = arr.sorted(by: >)   // 오름차순으로 정렬
         
-        // 정렬된 배열에서 현제 인덱스에 위치한 요소와 다음 인덱스에 위치한 요소가 같으면 중복
+        // 정렬된 배열에서 현재 인덱스에 위치한 요소와 다음 인덱스에 위치한 요소가 같으면 중복
         for i in sortedArr.startIndex..<sortedArr.endIndex - 1 where sortedArr[i] == sortedArr[i + 1] { return true }
         
         return false
