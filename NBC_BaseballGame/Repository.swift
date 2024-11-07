@@ -17,7 +17,15 @@ class GameRecord {
     }
 }
 
-final class Repository {
+protocol GameRepository {
+    var dataBase: [GameRecord] { get set }
+    
+    func add()
+    
+    func show()
+}
+
+final class BaseBallGameRepository: GameRepository {
     var dataBase: [GameRecord] = []
     
     func add() { dataBase.append(GameRecord()) }
@@ -32,7 +40,5 @@ final class Repository {
         for (index, data) in dataBase.enumerated() {
             print("\(index + 1)번째 게임 : 시도 횟수 - \(data.challengeCount)")
         }
-        
-        print()
     }
 }

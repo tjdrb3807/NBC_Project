@@ -7,6 +7,6 @@
 
 import Foundation
 
-let game = BaseBallGame()
+let game = BaseBallGame(repository: BaseBallGameRepository())
 game.start()
 

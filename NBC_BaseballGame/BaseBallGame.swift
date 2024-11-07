@@ -5,37 +5,10 @@
 //  Created by 전성규 on 11/6/24.
 //
 
-enum Hint: Equatable {
-    case win
-    case strikeAndBall(strikeCount: Int, ballCount: Int)
-    case onlyStrike(count: Int)
-    case onlyBall(count: Int)
-    case out
-}
-
-enum InvalidAnswer: String {
-    case notThreeDigits = "세 자리가 아닙니다.\n"
-    case notJustNumber = "숫자가 아닌 문자가 입력되었습니다.\n"
-    case hasDuplicate = "중복된 숫자가 있습니다.\n"
-    case notFirstZero = "첫 번째 자리에 0은 입력할 수 없습니다.\n"
-}
-
-enum GameOption: Int {
-    case start = 1
-    case record
-    case exit
-}
-
-enum InvalidOption: String {
-    case notOneDigits = "한 자리 숫자만 입력해주세요.\n"
-    case notInteger = "숫자만 입력해주세요\n"
-    case notOption = "지원하지 않는 기능(숫자)입니다.\n"
-}
-
 import Foundation
 
 final class BaseBallGame {
-    let repository = Repository()
+    private let repository: GameRepository
     var selectedOption: GameOption?
     
     var answer: [Int] = []
@@ -45,6 +18,10 @@ final class BaseBallGame {
     var hint: Hint?
     
     var flag = true
+    
+    init(repository: GameRepository) {
+        self.repository = repository
+    }
     
     func start() {
         while flag {
