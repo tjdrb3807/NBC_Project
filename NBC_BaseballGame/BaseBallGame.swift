@@ -35,6 +35,7 @@ enum InvalidOption: String {
 import Foundation
 
 final class BaseBallGame {
+    let repository = Repository()
     var selectedOption: GameOption?
     
     var answer: [Int] = []
@@ -46,51 +47,16 @@ final class BaseBallGame {
     var flag = true
     
     func start() {
-        startIntro()
-        
-        switch selectedOption! {
-        case .start:
-            print("\n< 게임을 시작합니다 >")
-            makeAnswer()
-            print(answer)
-            
-            while flag {
-                invalidAnswer = requestAnswer()
-                guard invalidAnswer == nil else {
-                    print(invalidAnswer!.rawValue)
-                    invalidAnswer = nil
-                    
-                    continue
-                }
-                
-                hint = startInning()
-                
-                guard let result = hint,
-                      result == .win else {
-                    switch hint! {
-                    case .strikeAndBall(let strikeCount, let ballCount):
-                        print("\(strikeCount)스트라이크 \(ballCount)볼\n")
-                    case .onlyStrike(let count):
-                        print("\(count)스트라이크\n")
-                    case .onlyBall(let count):
-                        print("\(count)볼\n")
-                    case .out:
-                        print("Nothing\n")
-                    default:
-                        break
-                    }
-                    hint = nil
-                    
-                    continue
-                }
-                
-                print("정답입니다!")
-                flag = false
+        while flag {
+            startIntro()
+            switch selectedOption! {
+            case .start:
+                startGame()
+            case .record:
+                repository.show()
+            case .exit:
+                print("종료 기능 구현")
             }
-        case .record:
-            print("기록 보기 기능 구현")
-        case .exit:
-            print("종료 기능 구현")
         }
     }
     
@@ -156,6 +122,49 @@ final class BaseBallGame {
                 break
             }
         }()
+    }
+    
+    private func startGame() {
+        print("\n< 게임을 시작합니다 >")
+        makeAnswer()
+        repository.add()
+        print(answer)
+        
+        while true {
+            invalidAnswer = requestAnswer()
+            guard invalidAnswer == nil else {
+                print(invalidAnswer!.rawValue)
+                invalidAnswer = nil
+                
+                continue
+            }
+            
+            hint = startInning()
+            
+            guard let result = hint,
+                  result == .win else {
+                switch hint! {
+                case .strikeAndBall(let strikeCount, let ballCount):
+                    print("\(strikeCount)스트라이크 \(ballCount)볼\n")
+                case .onlyStrike(let count):
+                    print("\(count)스트라이크\n")
+                case .onlyBall(let count):
+                    print("\(count)볼\n")
+                case .out:
+                    print("Nothing\n")
+                default:
+                    break
+                }
+                hint = nil
+                guard let lastIndex = repository.dataBase.last else { return }
+                lastIndex.updateChallengeCount()
+                
+                continue
+            }
+            
+            print("정답입니다!\n")
+            break
+        }
     }
     
     private func startInning() -> Hint {
