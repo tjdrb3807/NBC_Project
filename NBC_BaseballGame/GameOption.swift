@@ -6,3 +6,9 @@
 //
 
 import Foundation
+
+enum GameOption: Int {
+    case start = 1
+    case record
+    case exit
+}

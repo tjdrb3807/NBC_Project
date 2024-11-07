@@ -6,3 +6,11 @@
 //
 
 import Foundation
+
+enum Hint: Equatable {
+    case win
+    case strikeAndBall(strikeCount: Int, ballCount: Int)
+    case onlyStrike(count: Int)
+    case onlyBall(count: Int)
+    case out
+}
