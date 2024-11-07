@@ -116,7 +116,7 @@ final class BaseBallGame: GameClass {
         makeAnswer()
         repository.add()
         guard let lastIndex = repository.dataBase.last else { return }  // 해당 게임 데이터 저장소 위치
-        //        print(answer)
+                print(answer)
         
         while true {
             invalidAnswer = requestAnswer()
