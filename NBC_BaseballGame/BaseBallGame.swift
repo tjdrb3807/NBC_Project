@@ -7,8 +7,8 @@
 
 import Foundation
 
-final class BaseBallGame {
-    private let repository: GameRepository
+final class BaseBallGame: Game {
+//    private let repository: GameRepository
     var selectedOption: GameOption?
     
     var answer: [Int] = []
@@ -19,8 +19,8 @@ final class BaseBallGame {
     
     var flag = true
     
-    init(repository: GameRepository) {
-        self.repository = repository
+    override init(repository: GameRepository) {
+        super.init(repository: repository)
     }
     
     func start() {
@@ -30,7 +30,7 @@ final class BaseBallGame {
             case .start:
                 startGame()
             case .record:
-                repository.show()
+                super.repository.show()
             case .exit:
                 flag = false
             }
@@ -117,7 +117,7 @@ final class BaseBallGame {
         makeAnswer()
         repository.add()
         guard let lastIndex = repository.dataBase.last else { return }  // 해당 게임 데이터 저장소 위치
-//        print(answer)
+        //        print(answer)
         
         while true {
             invalidAnswer = requestAnswer()
