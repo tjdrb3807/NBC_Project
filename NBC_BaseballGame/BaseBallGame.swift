@@ -107,6 +107,7 @@ final class BaseBallGame {
         print("\n< 게임을 시작합니다 >")
         makeAnswer()
         repository.add()
+        guard let lastIndex = repository.dataBase.last else { return }
         print(answer)
         
         while true {
@@ -135,13 +136,14 @@ final class BaseBallGame {
                     break
                 }
                 hint = nil
-                guard let lastIndex = repository.dataBase.last else { return }
                 lastIndex.updateChallengeCount()
                 
                 continue
             }
             
             print("정답입니다!\n")
+            answer.removeAll()
+            lastIndex.updateChallengeCount()
             break
         }
     }
