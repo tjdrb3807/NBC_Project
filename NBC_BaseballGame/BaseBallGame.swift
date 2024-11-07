@@ -72,8 +72,17 @@ final class BaseBallGame {
     }
     
     private func makeAnswer() {
+        var isFirst = true
+        
         while answer.count < 3 {
-            let number = Int.random(in: 1...9)
+            guard !isFirst else {
+                answer.append(Int.random(in: 1...9))
+                isFirst = false
+                
+                continue
+            }
+            
+            let number = Int.random(in: 0...9)
             if !answer.contains(number) { answer.append(number) }
         }
     }
