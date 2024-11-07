@@ -55,9 +55,11 @@ final class BaseBallGame {
             case .record:
                 repository.show()
             case .exit:
-                print("종료 기능 구현")
+                flag = false
             }
         }
+        
+        print("< 숫자 야구 게임을 종료합니다 >")
     }
     
     private func makeAnswer() {
