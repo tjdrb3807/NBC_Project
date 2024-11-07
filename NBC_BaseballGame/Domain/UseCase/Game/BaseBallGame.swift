@@ -7,8 +7,7 @@
 
 import Foundation
 
-final class BaseBallGame: Game {
-//    private let repository: GameRepository
+final class BaseBallGame: GameClass {
     var selectedOption: GameOption?
     
     var answer: [Int] = []
