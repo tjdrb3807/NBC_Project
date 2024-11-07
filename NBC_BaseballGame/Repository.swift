@@ -12,8 +12,6 @@ class GameRecord {
     
     func updateChallengeCount() {
         self.challengeCount += 1
-        
-        print(challengeCount)
     }
 }
 
