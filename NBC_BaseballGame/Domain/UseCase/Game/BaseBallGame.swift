@@ -114,7 +114,7 @@ final class BaseBallGame: GameClass {
     private func startGame() {
         print("\n< 게임을 시작합니다 >")
         makeAnswer()
-        repository.add()
+        repository.add() // 게임 처음 시작 시 database에 해당 게임 데이터 저장
         guard let lastIndex = repository.dataBase.last else { return }  // 해당 게임 데이터 저장소 위치
                 print(answer)
         
