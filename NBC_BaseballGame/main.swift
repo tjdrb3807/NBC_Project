@@ -8,6 +8,5 @@
 import Foundation
 
 let game = BaseBallGame()
-
-game.makeAnswer()
+game.start()
 
