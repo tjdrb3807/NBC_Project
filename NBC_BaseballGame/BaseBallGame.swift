@@ -46,42 +46,51 @@ final class BaseBallGame {
     var flag = true
     
     func start() {
-        print("< 게임을 시작합니다 >")
-        makeAnswer()
-        print(answer)
+        startIntro()
         
-        while flag {
-            invalidAnswer = requestAnswer()
-            guard invalidAnswer == nil else {
-                print(invalidAnswer!.rawValue)
-                invalidAnswer = nil
-                
-                continue
-            }
+        switch selectedOption! {
+        case .start:
+            print("\n< 게임을 시작합니다 >")
+            makeAnswer()
+            print(answer)
             
-            hint = startInning()
-            
-            guard let result = hint,
-                  result == .win else {
-                switch hint! {
-                case .strikeAndBall(let strikeCount, let ballCount):
-                    print("\(strikeCount)스트라이크 \(ballCount)볼\n")
-                case .onlyStrike(let count):
-                    print("\(count)스트라이크\n")
-                case .onlyBall(let count):
-                    print("\(count)볼\n")
-                case .out:
-                    print("Nothing\n")
-                default:
-                    break
+            while flag {
+                invalidAnswer = requestAnswer()
+                guard invalidAnswer == nil else {
+                    print(invalidAnswer!.rawValue)
+                    invalidAnswer = nil
+                    
+                    continue
                 }
-                hint = nil
                 
-                continue
+                hint = startInning()
+                
+                guard let result = hint,
+                      result == .win else {
+                    switch hint! {
+                    case .strikeAndBall(let strikeCount, let ballCount):
+                        print("\(strikeCount)스트라이크 \(ballCount)볼\n")
+                    case .onlyStrike(let count):
+                        print("\(count)스트라이크\n")
+                    case .onlyBall(let count):
+                        print("\(count)볼\n")
+                    case .out:
+                        print("Nothing\n")
+                    default:
+                        break
+                    }
+                    hint = nil
+                    
+                    continue
+                }
+                
+                print("정답입니다!")
+                flag = false
             }
-            
-            print("정답입니다!")
-            flag = false
+        case .record:
+            print("기록 보기 기능 구현")
+        case .exit:
+            print("종료 기능 구현")
         }
     }
     
