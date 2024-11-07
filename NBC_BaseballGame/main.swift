@@ -7,5 +7,7 @@
 
 import Foundation
 
-print("Hello, World!")
+let game = BaseBallGame()
+
+game.makeAnswer()
 
