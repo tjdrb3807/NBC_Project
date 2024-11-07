@@ -17,7 +17,7 @@ enum InvalidAnswer: String {
     case notThreeDigits = "세 자리가 아닙니다.\n"
     case notJustNumber = "숫자가 아닌 문자가 입력되었습니다.\n"
     case hasDuplicate = "중복된 숫자가 있습니다.\n"
-    case isZero = "0은 입력할 수 없습니다.\n"
+    case notFirstZero = "첫 번째 자리에 0은 입력할 수 없습니다.\n"
 }
 
 import Foundation
@@ -94,9 +94,9 @@ final class BaseBallGame {
         guard strAnswer.count == 3 else { return .notThreeDigits }
         guard !isDuplicate(strAnswer) else { return .hasDuplicate }
         
-        for c in strAnswer {
+        for (index, c) in strAnswer.enumerated() {
             guard let intAnswer = c.wholeNumberValue else { return .notJustNumber }
-            guard !(intAnswer == 0) else { return .isZero }
+            guard !(index == 0 && intAnswer == 0) else { return .notFirstZero}
             
             enteredAnswer.append(intAnswer)
         }
