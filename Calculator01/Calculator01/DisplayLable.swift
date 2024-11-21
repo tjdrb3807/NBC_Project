@@ -19,7 +19,6 @@ final class DisplayLable: UILabel {
         textColor = .white
         textAlignment = .right
         font = .boldSystemFont(ofSize: 60.0)
-        backgroundColor = .black
     }
     
     required init?(coder: NSCoder) {
@@ -42,7 +41,11 @@ struct DisplayLable_Previews: PreviewProvider {
     
     struct DisplayLable_Presentable: UIViewRepresentable {
         func makeUIView(context: Context) -> some UIView {
-            DisplayLable()
+            let view = DisplayLable()
+            view.text = "12312*2"
+            view.backgroundColor = .black
+            
+            return view
         }
         
         func updateUIView(_ uiView: UIViewType, context: Context) {}
