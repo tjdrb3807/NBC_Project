@@ -34,26 +34,38 @@ struct DefaultCalculator: Calculator {
             case .allClear:
                 context = NumberKeyPad.zero.text
             default:
+                guard ![OperatorKeyPad.add.text, OperatorKeyPad.sub.text, OperatorKeyPad.mul.text, OperatorKeyPad.div.text]
+                    .contains(getLastInputString()) else { return }
+                
                 context.append(operatorKeyPad.text)
             }
             
             notify(context)
             return
         }
+        if getLastInputString() == OperatorKeyPad.div.text, keyPad == NumberKeyPad.zero { return }
         
         if (context.count == 1) && (context == NumberKeyPad.zero.text) { context = "" }
         context.append(keyPad.text)
+        
         notify(context)
     }
     
     func notify(_ context: String) { observers.forEach { $0.update(context: context) } }
     
     private func calculate(expression: String) -> Int? {
-            let expression = NSExpression(format: expression)
+        let expression = NSExpression(format: expression)
+        
         if let result = expression.expressionValue(with: nil, context: nil) as? Int {
             return result
         } else {
             return nil
         }
+    }
+    
+    private func getLastInputString() -> String {
+        let lastIndex = context.index(before: context.endIndex)
+        
+        return String(context[lastIndex])
     }
 }
