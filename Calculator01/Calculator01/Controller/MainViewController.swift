@@ -9,6 +9,10 @@ import UIKit
 import SnapKit
 
 protocol Observer {
+    /// Subject가 데이터 변화를 Notify 하면 변경된 데이터를 기반으로 View를 Update
+    /// - Parameter context: Model 데이터
+    ///
+    /// Subject.Notify() 메서드에서 호출
     func update(context: String)
 }
 
@@ -96,9 +100,10 @@ final class MainViewController: BaseViewController, Observer {
 
     @objc private func tapKeyPadButton(_ sender: UIButton) {
         guard let keyPadButton = sender as? KeyPadButton else { return }
+        // Model에 UserAction으로 발생한 Event(KeyPadButton) 전달
         model?.requestCalculation(from: keyPadButton.type)
     }
-    
+
     func update(context: String) { disPlayLabel.text = context }
 }
 

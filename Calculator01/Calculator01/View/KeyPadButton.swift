@@ -7,6 +7,8 @@
 
 import UIKit
 
+// 한 개의 매개변수에 두가지 Value Type을 전달하기 위해 인터페이스 구현
+// 전달하려는 매개변수 타입을 해당 프로토콜로 선언해 프로토콜을 채택한 Type을 매개변수로 전달할 수 있도록 구현
 protocol KeyPad {
     var text: String { get }
 }
@@ -61,6 +63,7 @@ final class KeyPadButton: UIButton {
         titleLabel?.font = .boldSystemFont(ofSize: 30.0)
         layer.cornerRadius = 80.0 / 2
         
+        // 이니셜라이저의 매개변수를 통해 전달받은 데이터(type)에 따른 button properties 설정
         type is NumberKeyPad ?
         (backgroundColor = UIColor(red: 58/255, green: 58/255, blue: 58/255, alpha: 1.0)) :
         (backgroundColor = .orange)
