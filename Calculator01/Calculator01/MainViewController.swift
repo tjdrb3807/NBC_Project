@@ -8,7 +8,13 @@
 import UIKit
 import SnapKit
 
-final class MainViewController: BaseViewController {
+protocol Observer {
+    func update(context: String)
+}
+
+final class MainViewController: BaseViewController, Observer {
+    var model: Calculator?
+    
     private lazy var disPlayLabel: DisplayLable = { DisplayLable() }()
     
     private lazy var vStackView: UIStackView = {
@@ -33,6 +39,8 @@ final class MainViewController: BaseViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        model = DefaultCalculator()
+        model?.addObserver(self)
     }
     
     override func configureUI() {
@@ -87,31 +95,11 @@ final class MainViewController: BaseViewController {
     }
 
     @objc private func tapKeyPadButton(_ sender: UIButton) {
-        guard let sender = sender as? KeyPadButton else { return }
-        
-        if sender.type is OperatorKeyPad {
-            guard let operatorType = sender.type as? OperatorKeyPad else { return }
-            
-            if operatorType == .equal {
-                disPlayLabel.text = String(calculate(expression: disPlayLabel.text!) ?? 0)
-                return
-            } else if operatorType == .allClear {
-                disPlayLabel.text = NumberKeyPad.zero.rawValue
-                return
-            }
-        } else { if disPlayLabel.text?.count == 1 && disPlayLabel.text == NumberKeyPad.zero.rawValue { disPlayLabel.text = "" } }
-        
-        disPlayLabel.text?.append(sender.type.text)
+        guard let keyPadButton = sender as? KeyPadButton else { return }
+        model?.requestCalculation(from: keyPadButton.type)
     }
     
-    private func calculate(expression: String) -> Int? {
-            let expression = NSExpression(format: expression)
-        if let result = expression.expressionValue(with: nil, context: nil) as? Int {
-            return result
-        } else {
-            return nil
-        }
-    }
+    func update(context: String) { disPlayLabel.text = context }
 }
 
 #if DEBUG

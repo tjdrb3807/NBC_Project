@@ -8,6 +8,10 @@
 import UIKit
 
 final class DisplayLable: UILabel {
+    func update(context: String) {
+        text = context
+    }
+    
     override init(frame: CGRect) {
         super.init(frame: .zero)
     
