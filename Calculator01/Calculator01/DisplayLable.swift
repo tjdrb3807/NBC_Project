@@ -19,6 +19,8 @@ final class DisplayLable: UILabel {
         textColor = .white
         textAlignment = .right
         font = .boldSystemFont(ofSize: 60.0)
+        numberOfLines = 0
+        lineBreakMode = .byTruncatingHead
     }
     
     required init?(coder: NSCoder) {
