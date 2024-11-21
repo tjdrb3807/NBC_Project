@@ -30,13 +30,12 @@ struct DefaultCalculator: Calculator {
             
             switch operatorKeyPad {
             case .equal:
+                if [OperatorKeyPad.add.text, OperatorKeyPad.sub.text, OperatorKeyPad.mul.text, OperatorKeyPad.div.text].contains(getLastInputString()) { context.removeLast() }
                 context = String(calculate(expression: context) ?? 0)
             case .allClear:
                 context = NumberKeyPad.zero.text
             default:
-                guard ![OperatorKeyPad.add.text, OperatorKeyPad.sub.text, OperatorKeyPad.mul.text, OperatorKeyPad.div.text]
-                    .contains(getLastInputString()) else { return }
-                
+                guard ![OperatorKeyPad.add.text, OperatorKeyPad.sub.text, OperatorKeyPad.mul.text, OperatorKeyPad.div.text].contains(getLastInputString()) else { return }
                 context.append(operatorKeyPad.text)
             }
             

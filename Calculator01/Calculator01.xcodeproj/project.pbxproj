@@ -15,7 +15,7 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		4544CC732CEC543E002D7C5C /* Exceptions for "Calculator01" folder in "Calculator01" target */ = {
+		453D39E52CEF87A300EF2087 /* Exceptions for "Calculator01" folder in "Calculator01" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Info.plist,
@@ -25,10 +25,10 @@
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		4544CC632CEC543C002D7C5C /* Calculator01 */ = {
+		453D39DA2CEF87A300EF2087 /* Calculator01 */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
-				4544CC732CEC543E002D7C5C /* Exceptions for "Calculator01" folder in "Calculator01" target */,
+				453D39E52CEF87A300EF2087 /* Exceptions for "Calculator01" folder in "Calculator01" target */,
 			);
 			path = Calculator01;
 			sourceTree = "<group>";
@@ -50,7 +50,7 @@
 		4544CC582CEC543C002D7C5C = {
 			isa = PBXGroup;
 			children = (
-				4544CC632CEC543C002D7C5C /* Calculator01 */,
+				453D39DA2CEF87A300EF2087 /* Calculator01 */,
 				4544CC622CEC543C002D7C5C /* Products */,
 			);
 			sourceTree = "<group>";
@@ -79,7 +79,7 @@
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
-				4544CC632CEC543C002D7C5C /* Calculator01 */,
+				453D39DA2CEF87A300EF2087 /* Calculator01 */,
 			);
 			name = Calculator01;
 			packageProductDependencies = (
