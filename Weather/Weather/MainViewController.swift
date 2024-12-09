@@ -45,14 +45,20 @@ final class MainViewController: UIViewController {
         
         guard let url = urlComponents?.url else { return }
         
-        fetchData(url: url) { [weak self] (dto: CurrentWeatherResponseDTO?) in
-            guard let self, let dto else { return }
+        Task {
+            let data = await fetchData(url: url)
             
-            currentWeatherView.updateUI(
-                currentTemp: dto.data.temp,
-                minTemp: dto.data.minTemp,
-                maxTemp: dto.data.maxTemp)
+            
         }
+        
+//        fetchData(url: url) { [weak self] (dto: CurrentWeatherResponseDTO?) in
+//            guard let self, let dto else { return }
+//            
+//            currentWeatherView.updateUI(
+//                currentTemp: dto.data.temp,
+//                minTemp: dto.data.minTemp,
+//                maxTemp: dto.data.maxTemp)
+//        }
     }
     
 //    private func fetchCurrentWeatherData() {
@@ -108,9 +114,10 @@ final class MainViewController: UIViewController {
     
     // MARK: 제네릭으로 처리하는 생각!
     private func fetchData<T: Codable>(url: URL, completion: @escaping (T?) -> Void) {
+        print("Main Thread에서 출력: \(Thread.current)")
         let urlSession = URLSession(configuration: .default)
         urlSession.dataTask(with: URLRequest(url: url)) { data, response, error in
-            print("URLSession.dataTack 안에서 출력: \(Thread.current)")   // MARK: 작업 스레드 확인용, 네트워크 라이브러리는 자동으로 global thread에서 호출되는것을 확인할 수 있음!!!
+            print("URLSession.dataTack 안에서 출력: \(Thread.current)")
             guard let data = data, error == nil else {
                 print("FAIL: Data Load")
                 completion(nil)
@@ -130,6 +137,25 @@ final class MainViewController: UIViewController {
                 completion(nil)
             }
         }.resume()
+    }
+    
+    private func fetchData(url: URL) async -> CurrentWeatherResponseDTO? {
+        let urlSession = URLSession(configuration: .default)
+        
+        do  {
+            let (data, response) = try await urlSession.data(from: url)
+            if let response = response as? HTTPURLResponse,
+               (200..<300).contains(response.statusCode) {
+                guard let decodedData = try? JSONDecoder().decode(CurrentWeatherResponseDTO.self, from: data) else {
+                    return nil
+                }
+                return decodedData
+            } else {
+                return nil
+            }
+        } catch {
+            return nil
+        }
     }
 }
 
