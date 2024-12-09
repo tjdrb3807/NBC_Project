@@ -6,13 +6,8 @@
 	objectVersion = 77;
 	objects = {
 
-/* Begin PBXBuildFile section */
-		45C01D182D06D3F9000C4D80 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45C01D172D06D3F9000C4D80 /* MainViewController.swift */; };
-/* End PBXBuildFile section */
-
 /* Begin PBXFileReference section */
 		4549624E2D06CEEA00F2CBC1 /* NBC_PhoneBook.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NBC_PhoneBook.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		45C01D172D06D3F9000C4D80 /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -50,7 +45,6 @@
 		454962452D06CEE900F2CBC1 = {
 			isa = PBXGroup;
 			children = (
-				45C01D172D06D3F9000C4D80 /* MainViewController.swift */,
 				454962502D06CEEA00F2CBC1 /* NBC_PhoneBook */,
 				4549624F2D06CEEA00F2CBC1 /* Products */,
 			);
@@ -138,7 +132,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				45C01D182D06D3F9000C4D80 /* MainViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
