@@ -7,15 +7,20 @@
 
 import UIKit
 import SnapKit
+import Kingfisher
+
+protocol ProfileImageViewDelegate: AnyObject {
+    func fetchRandomImageURL(completion: @escaping (URL?) -> Void)
+}
 
 final class ProfileImageView: UIStackView {
+    weak var delegate: ProfileImageViewDelegate?
+    
     private let imageView: UIImageView = {
         let imageView = UIImageView()
-        imageView.backgroundColor = .lightGray
         
         imageView.layer.cornerRadius = 200.0 / 2
         imageView.layer.borderWidth = 1.0
-        imageView.layer.borderColor = UIColor.systemBackground.cgColor
         imageView.clipsToBounds = true
         
         return imageView
@@ -25,6 +30,11 @@ final class ProfileImageView: UIStackView {
         let button = UIButton()
         button.setTitle("랜덤 이미지 생성", for: .normal)
         button.setTitleColor(.black, for: .normal)
+        
+        button.addTarget(
+            self,
+            action: #selector(randomInageFetchButtonDidTap),
+            for: .touchUpInside)
         
         return button
     }()
@@ -43,7 +53,7 @@ final class ProfileImageView: UIStackView {
     private func configureUI() {
         axis = .vertical
         alignment = .center
-        distribution = .fillProportionally
+        distribution = .fill
         spacing = 20.0
         
         [imageView, randomImageFetchButton].forEach { addArrangedSubview($0) }
@@ -51,6 +61,16 @@ final class ProfileImageView: UIStackView {
     
     private func setupConstraints() {
         imageView.snp.makeConstraints { $0.width.height.equalTo(200.0) }
+    }
+    
+    @objc private func randomInageFetchButtonDidTap() {
+        delegate?.fetchRandomImageURL { imageURL in
+            DispatchQueue.main.async { [weak self] in
+                guard let self = self else { return }
+                
+                self.imageView.kf.setImage(with: imageURL)
+            }
+        }
     }
 }
 

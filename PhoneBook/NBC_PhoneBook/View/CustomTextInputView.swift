@@ -20,20 +20,20 @@ final class CustomTextInputView: UIStackView {
         guard let self = self else { return UILabel() }
         
         let label = UILabel()
-        label.text = type.rawValue
+        label.text = "\(type.rawValue) (필수)"
         label.font = .systemFont(ofSize: 12.0, weight: .light)
         label.numberOfLines = 1
         
         return label
     }()
     
-    private lazy var textField: UITextField = { [weak self] in
+    lazy var textField: UITextField = { [weak self] in
         guard let self = self else { return UITextField() }
         
         let textField = UITextField()
         switch type {
         case .name:
-            textField.placeholder = "이름을 입력해주세요."
+            textField.placeholder = "홍길동"
         case .phoneNumber:
             textField.placeholder = "010-0000-0000"
         }

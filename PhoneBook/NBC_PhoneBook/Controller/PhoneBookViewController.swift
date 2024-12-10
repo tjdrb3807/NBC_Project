@@ -21,6 +21,7 @@ final class PhoneBookViewController: BaseViewController {
     
     private lazy var profileImageView = {
         let view = ProfileImageView()
+        view.delegate = self
         
         return view
     }()
@@ -35,9 +36,19 @@ final class PhoneBookViewController: BaseViewController {
         return stackView
     }()
     
-    private let nameInputView = CustomTextInputView(type: .name)
+    private lazy var nameInputView = {
+        let view = CustomTextInputView(type: .name)
+        view.textField.delegate = self
+        
+        return view
+    }()
     
-    private let phoneNumberInputView = CustomTextInputView(type: .phoneNumber)
+    private lazy var phoneNumberInputView = {
+        let view = CustomTextInputView(type: .phoneNumber)
+        view.textField.delegate = self
+        
+        return view
+    }()
     
     override func configureNavigationBar() {
         super.configureNavigationBar()
@@ -65,6 +76,36 @@ final class PhoneBookViewController: BaseViewController {
         nameInputView.snp.makeConstraints { $0.height.equalTo(70.0) }
         
         phoneNumberInputView.snp.makeConstraints { $0.height.equalTo(70.0) }
+    }
+}
+
+extension PhoneBookViewController: UITextFieldDelegate {
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        if textField === nameInputView.textField {
+            phoneNumberInputView.textField.becomeFirstResponder()
+        } else if textField === phoneNumberInputView.textField {
+            phoneNumberInputView.textField.resignFirstResponder()
+        }
+        
+        return true
+    }
+}
+
+extension PhoneBookViewController: ProfileImageViewDelegate {
+    func fetchRandomImageURL(completion: @escaping (URL?) -> Void) {
+        let randomNumber = Int.random(in: 1...1000)
+        guard let url = URL(string: "https://pokeapi.co/api/v2/pokemon/\(randomNumber)") else { return completion(nil) }
+        
+        URLSession.shared.dataTask(with: url) { data, response, error in
+            guard let data = data, error == nil else { return completion(nil) }
+            
+            if let response = response as? HTTPURLResponse,
+               (200..<300).contains(response.statusCode) {
+                guard let decodedData = try? JSONDecoder().decode(RandomImageResponseDTO.self, from: data) else { return completion(nil) }
+                
+                return completion(decodedData.image.url)
+            }
+        }.resume()
     }
 }
 
