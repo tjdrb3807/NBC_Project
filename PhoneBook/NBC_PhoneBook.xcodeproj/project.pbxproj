@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		45085F702D07DB5A002CC414 /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = 45085F6F2D07DB5A002CC414 /* Kingfisher */; };
 		45C01D232D06D5B4000C4D80 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 45C01D1A2D06D5B4000C4D80 /* Assets.xcassets */; };
 		45C01D252D06D5B4000C4D80 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 45C01D1D2D06D5B4000C4D80 /* LaunchScreen.storyboard */; };
 		45C01D272D06D5B4000C4D80 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45C01D192D06D5B4000C4D80 /* AppDelegate.swift */; };
@@ -24,6 +25,11 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
+		45085F6D2D07D123002CC414 /* Utils */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = Utils;
+			sourceTree = "<group>";
+		};
 		45C01D2A2D06D652000C4D80 /* View */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = View;
@@ -46,6 +52,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				45085F702D07DB5A002CC414 /* Kingfisher in Frameworks */,
 				45C01D392D06DDBF000C4D80 /* SnapKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -72,6 +79,7 @@
 		45C01D222D06D5B4000C4D80 /* NBC_PhoneBook */ = {
 			isa = PBXGroup;
 			children = (
+				45085F6D2D07D123002CC414 /* Utils */,
 				45C01D2C2D06D663000C4D80 /* Model */,
 				45C01D2B2D06D65C000C4D80 /* Controller */,
 				45C01D2A2D06D652000C4D80 /* View */,
@@ -100,6 +108,7 @@
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
+				45085F6D2D07D123002CC414 /* Utils */,
 				45C01D2A2D06D652000C4D80 /* View */,
 				45C01D2B2D06D65C000C4D80 /* Controller */,
 				45C01D2C2D06D663000C4D80 /* Model */,
@@ -107,6 +116,7 @@
 			name = NBC_PhoneBook;
 			packageProductDependencies = (
 				45C01D382D06DDBF000C4D80 /* SnapKit */,
+				45085F6F2D07DB5A002CC414 /* Kingfisher */,
 			);
 			productName = NBC_PhoneBook;
 			productReference = 4549624E2D06CEEA00F2CBC1 /* NBC_PhoneBook.app */;
@@ -138,6 +148,7 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				45C01D372D06DDBF000C4D80 /* XCRemoteSwiftPackageReference "SnapKit" */,
+				45085F6E2D07DB5A002CC414 /* XCRemoteSwiftPackageReference "Kingfisher" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 4549624F2D06CEEA00F2CBC1 /* Products */;
@@ -380,6 +391,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		45085F6E2D07DB5A002CC414 /* XCRemoteSwiftPackageReference "Kingfisher" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/onevcat/Kingfisher.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 8.1.2;
+			};
+		};
 		45C01D372D06DDBF000C4D80 /* XCRemoteSwiftPackageReference "SnapKit" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/SnapKit/SnapKit.git";
@@ -391,6 +410,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		45085F6F2D07DB5A002CC414 /* Kingfisher */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 45085F6E2D07DB5A002CC414 /* XCRemoteSwiftPackageReference "Kingfisher" */;
+			productName = Kingfisher;
+		};
 		45C01D382D06DDBF000C4D80 /* SnapKit */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 45C01D372D06DDBF000C4D80 /* XCRemoteSwiftPackageReference "SnapKit" */;
