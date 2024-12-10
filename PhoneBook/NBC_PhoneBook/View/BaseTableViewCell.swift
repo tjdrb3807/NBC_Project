@@ -20,9 +20,10 @@ class BaseTableViewCell: UITableViewCell {
     }
     
     func configureUI() {
+        backgroundColor = .systemBackground
+        selectionStyle = .default
+        
         // Override Code..
-        backgroundColor = .clear
-        selectionStyle = .none
     }
     
     func setupConstraints() {

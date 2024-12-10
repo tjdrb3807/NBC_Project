@@ -36,6 +36,7 @@ final class CustomTextInputView: UIStackView {
             textField.placeholder = "홍길동"
         case .phoneNumber:
             textField.placeholder = "010-0000-0000"
+            textField.keyboardType = .numberPad
         }
         textField.textColor = .black
         textField.font = .systemFont(ofSize: 17.0)
@@ -43,6 +44,10 @@ final class CustomTextInputView: UIStackView {
         textField.layer.borderWidth = 1.0
         textField.layer.borderColor = UIColor.lightGray.cgColor
         textField.layer.cornerRadius = 12.0
+        
+        let spacing = UIView(frame: .init(x: 0.0, y: 0.0, width: 10.0, height: textField.frame.height))
+        textField.leftView = spacing
+        textField.leftViewMode = .always
         
         return textField
     }()

@@ -22,6 +22,10 @@ class BaseViewController: UIViewController {
         self.configureNavigationBar()
         self.configureUI()
         self.setupConstraints()
+        
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
+        tapGesture.cancelsTouchesInView = false  // TODO: TIL 작성
+        view.addGestureRecognizer(tapGesture)
     }
     
     func configureNavigationBar() {
@@ -46,4 +50,6 @@ class BaseViewController: UIViewController {
     func setupConstraints() {
         // Override Code..
     }
+    
+    @objc private func dismissKeyboard() { view.endEditing(true) }
 }

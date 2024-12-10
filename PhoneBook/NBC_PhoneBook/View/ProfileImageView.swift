@@ -19,14 +19,14 @@ final class ProfileImageView: UIStackView {
     private let imageView: UIImageView = {
         let imageView = UIImageView()
         
-        imageView.layer.cornerRadius = 200.0 / 2
+        imageView.layer.cornerRadius = 180.0 / 2
         imageView.layer.borderWidth = 1.0
         imageView.clipsToBounds = true
         
         return imageView
     }()
     
-    private lazy var randomImageFetchButton: UIButton = {
+    lazy var randomImageFetchButton: UIButton = {
         let button = UIButton()
         button.setTitle("랜덤 이미지 생성", for: .normal)
         button.setTitleColor(.black, for: .normal)
@@ -54,13 +54,13 @@ final class ProfileImageView: UIStackView {
         axis = .vertical
         alignment = .center
         distribution = .fill
-        spacing = 20.0
+        spacing = 10.0
         
         [imageView, randomImageFetchButton].forEach { addArrangedSubview($0) }
     }
     
     private func setupConstraints() {
-        imageView.snp.makeConstraints { $0.width.height.equalTo(200.0) }
+        imageView.snp.makeConstraints { $0.width.height.equalTo(180.0) }
     }
     
     @objc private func randomInageFetchButtonDidTap() {
@@ -83,7 +83,7 @@ struct ProfileImageView_Previews: PreviewProvider {
         ProfileImageView_Presentable()
             .frame(
                 width: UIScreen.main.bounds.width,
-                height: 250.0,
+                height: 210.0,
                 alignment: .center)
     }
     

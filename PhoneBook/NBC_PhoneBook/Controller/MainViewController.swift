@@ -10,7 +10,8 @@ import SnapKit
 
 final class MainViewController: BaseViewController {
     private lazy var phoneBookTableView: UITableView = {
-        let tableView = UITableView(frame: .zero, style: .plain)
+        let tableView = UITableView()
+        tableView.separatorStyle = .none
         tableView.register(
             PhoneBookTableViewCell.self,
             forCellReuseIdentifier: PhoneBookTableViewCell.identifier)
@@ -39,19 +40,33 @@ final class MainViewController: BaseViewController {
     
     override func setupConstraints() {
         phoneBookTableView.snp.makeConstraints {
-            $0.top.leading.trailing.equalTo(view.safeAreaLayoutGuide).inset(20.0)
-            $0.bottom.equalToSuperview()
+            $0.top.equalTo(view.safeAreaLayoutGuide).inset(20.0)
+            $0.leading.trailing.equalTo(view.safeAreaLayoutGuide)
+            $0.bottom.equalToSuperview().inset(20.0)
         }
     }
     
     @objc private func rightBarButtonDidTap() {
-        navigationController?.pushViewController(PhoneBookViewController(), animated: true)
+        let phoneBookVC = PhoneBookViewController()
+        phoneBookVC.mode = .add
+        
+        navigationController?.pushViewController(phoneBookVC, animated: true)
     }
 }
 
 extension MainViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        10
+//        if model.list.isEmpty {
+//            let noDataLabel = UILabel()
+//            noDataLabel.text = "No Data"
+//            noDataLabel.textAlignment = .center
+//            tableView.backgroundView = noDataLabel
+//            return 0
+//        } else {
+//            tableView.backgroundView = nil
+//            return model.list.count
+//        }
+        1
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -64,6 +79,14 @@ extension MainViewController: UITableViewDataSource, UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         80.0
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let phoneBookVC = PhoneBookViewController()
+        phoneBookVC.mode = .default
+        
+        navigationController?.pushViewController(phoneBookVC, animated: true)
+        tableView.deselectRow(at: indexPath, animated: true)
     }
 }
 
