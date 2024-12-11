@@ -17,6 +17,7 @@ enum PhoneBookVCMode {
 final class PhoneBookViewController: BaseViewController {
     var mode: PhoneBookVCMode!
     var model: ContactInfo!
+    var cutNextVC: UIViewController?
     
     var modelDataChange: (() -> Void)?
     
@@ -74,15 +75,6 @@ final class PhoneBookViewController: BaseViewController {
             view.textField.text = model.name
             view.textField.isEnabled = false
         }
-        //
-        //        if mode == .default {
-        //            view.textField.isEnabled = false
-        //            view.textField.text = model.name
-        //            return view
-        //        } else {
-        //            view.textField.delegate = self
-        //            view.delegate = self
-        //        }
         
         return view
     }()
@@ -102,15 +94,6 @@ final class PhoneBookViewController: BaseViewController {
             view.textField.text = model.phoneNumber
             view.textField.isEnabled = false
         }
-        
-        //        if mode == .default {
-        //            view.textField.isEnabled = false
-        //            view.textField.text = model.phoneNumber
-        //            return view
-        //        } else {
-        //            view.textField.delegate = self
-        //            view.delegate = self
-        //        }
         
         return view
     }()
@@ -139,6 +122,11 @@ final class PhoneBookViewController: BaseViewController {
                 action: #selector(addModeRightBarButtonDidTap))
         case .edit:
             navigationItem.title = "연락처 편집"
+            navigationItem.leftBarButtonItem = UIBarButtonItem(
+                title: "취소",
+                style: .done,
+                target: self,
+                action: #selector(editModeLeftBarButtonDidTap))
             navigationItem.rightBarButtonItem = UIBarButtonItem(
                 title: "적용",
                 style: .done,
@@ -194,16 +182,80 @@ final class PhoneBookViewController: BaseViewController {
         }
     }
     
+    @objc private func editModeLeftBarButtonDidTap() {
+        if model.name == model.beforeName &&
+            model.phoneNumber == model.beforePhoneNumber &&
+            model.profileImageURL == model.beforeProfileImgaeURL {
+            
+            guard let navigationController = navigationController,
+                  let model = model else { return }
+            
+            let defaultModeVC = PhoneBookViewController()
+            let newModel = ContactInfo(
+                name: model.beforeName,
+                phoneNumber: model.beforeName,
+                profileImageURL: model.beforeProfileImgaeURL)
+            
+            defaultModeVC.mode = .default
+            defaultModeVC.model = newModel
+            
+            navigationController.popViewController(animated: false)
+            navigationController.pushViewController(defaultModeVC, animated: false)
+        } else {
+            let alert = UIAlertController(
+                title: "수정을 취소하시겠습니까?",
+                message: """
+                          수정을 취소하면 
+                          변경내역은 저장되지 않습니다.
+                          """,
+                preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "취소", style: .cancel))
+            alert.addAction(UIAlertAction(
+                title: "확인",
+                style: .default,
+                handler: { [weak self] _ in
+                    guard let self = self,
+                          let navigationController = navigationController,
+                          let model = model else { return }
+                    
+                    let defaultModeVC = PhoneBookViewController()
+                    let newModel = ContactInfo(
+                        name: model.beforeName,
+                        phoneNumber: model.beforeName,
+                        profileImageURL: model.beforeProfileImgaeURL)
+                    
+                    defaultModeVC.mode = .default
+                    defaultModeVC.model = newModel
+                    
+                    navigationController.popViewController(animated: false)
+                    navigationController.pushViewController(defaultModeVC, animated: false)
+                }))
+            
+            present(alert, animated: true)
+        }
+    }
+    
     @objc private func editModeRightBarButtonDidTap() {
-        print("수정 완료")
+        guard let navigationController = navigationController,
+              let mainVC = navigationController.viewControllers.first as? MainViewController else { return }
+        
+        model.updateData(model)
+        // TODO: 리펙토링 필요
+        mainVC.model.fetchAllData()
+        navigationController.popViewController(animated: true)
     }
     
     @objc private func defaultModeRightBarButtonDidTap() {
-        guard let navigationController = navigationController else { return }
+        guard let navigationController = navigationController, let model = model else { return }
         
         let editModeVC = PhoneBookViewController()
+        let newModel = model
+        newModel.beforeName = model.name
+        newModel.beforePhoneNumber = model.phoneNumber
+        newModel.beforeProfileImgaeURL = model.profileImageURL
+        
         editModeVC.mode = .edit
-        editModeVC.model = model
+        editModeVC.model = newModel
         editModeVC.nameInputView.textField.becomeFirstResponder()
         
         navigationController.popViewController(animated: false)

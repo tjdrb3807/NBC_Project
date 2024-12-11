@@ -59,13 +59,14 @@ final class MainViewController: BaseViewController {
     
     @objc private func rightBarButtonDidTap() {
         let phoneBookVC = PhoneBookViewController()
+    
+        phoneBookVC.mode = .add
+        phoneBookVC.model = ContactInfo()
         phoneBookVC.modelDataChange = { [weak self] in
             guard let self = self else { return }
             
             model.fetchAllData()
         }
-        phoneBookVC.mode = .add
-        phoneBookVC.model = ContactInfo()
         
         navigationController?.pushViewController(phoneBookVC, animated: true)
     }

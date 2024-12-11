@@ -14,6 +14,10 @@ class ContactInfo {
     var phoneNumber: String = ""
     var profileImageURL: URL?
     
+    var beforeName: String = ""
+    var beforePhoneNumber: String = ""
+    var beforeProfileImgaeURL: URL?
+    
     /// profileImageURL이 변경됐을 때 호출되는 클로저
     var profileImageURLDidChange: ((URL) -> Void)?
     
@@ -52,6 +56,17 @@ class ContactInfo {
         }
         
         contacts.append(dto)
+        saveData(contacts)
+    }
+    
+    func updateData(_ model: ContactInfo) {
+        var contacts = loadData()
+        let dto = model.toDTO()
+        
+        if let index = contacts.firstIndex(where: { $0.phoneNumber == dto.phoneNumber }) {
+            contacts[index] = dto
+        }
+        
         saveData(contacts)
     }
 }
