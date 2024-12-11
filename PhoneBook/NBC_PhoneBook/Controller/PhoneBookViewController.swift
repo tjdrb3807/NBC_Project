@@ -10,6 +10,7 @@ import SnapKit
 
 enum PhoneBookVCMode {
     case add
+    case edit
     case `default`
 }
 
@@ -32,12 +33,17 @@ final class PhoneBookViewController: BaseViewController {
     
     private lazy var profileImageView = {
         let view = ProfileImageView()
-        if mode == .default {
-            view.randomImageFetchButton.isHidden = true
-            view.imageView.kf.setImage(with: model.profileImageURL)
-            return view
-        } else {
+        guard let mode = mode else { return view }
+        
+        switch mode {
+        case .add:
             view.delegate = self
+        case .edit:
+            view.imageView.kf.setImage(with: model.profileImageURL)
+            view.delegate = self
+        case .default:
+            view.imageView.kf.setImage(with: model.profileImageURL)
+            view.randomImageFetchButton.isHidden = true
         }
         
         return view
@@ -55,29 +61,56 @@ final class PhoneBookViewController: BaseViewController {
     
     private lazy var nameInputView = {
         let view = CustomTextInputView(type: .name)
+        guard let mode = mode else { return view }
         
-        if mode == .default {
-            view.textField.isEnabled = false
-            view.textField.text = model.name
-            return view
-        } else {
+        switch mode {
+        case .add:
             view.textField.delegate = self
             view.delegate = self
+        case .edit:
+            view.textField.text = model.name
+            view.delegate = self
+        case .default:
+            view.textField.text = model.name
+            view.textField.isEnabled = false
         }
+        //
+        //        if mode == .default {
+        //            view.textField.isEnabled = false
+        //            view.textField.text = model.name
+        //            return view
+        //        } else {
+        //            view.textField.delegate = self
+        //            view.delegate = self
+        //        }
         
         return view
     }()
     
     private lazy var phoneNumberInputView = {
         let view = CustomTextInputView(type: .phoneNumber)
-        if mode == .default {
-            view.textField.isEnabled = false
-            view.textField.text = model.phoneNumber
-            return view
-        } else {
+        guard let mode = mode else { return view }
+        
+        switch mode {
+        case .add:
             view.textField.delegate = self
             view.delegate = self
+        case .edit:
+            view.textField.text = model.phoneNumber
+            view.delegate = self
+        case .default:
+            view.textField.text = model.phoneNumber
+            view.textField.isEnabled = false
         }
+        
+        //        if mode == .default {
+        //            view.textField.isEnabled = false
+        //            view.textField.text = model.phoneNumber
+        //            return view
+        //        } else {
+        //            view.textField.delegate = self
+        //            view.delegate = self
+        //        }
         
         return view
     }()
@@ -103,9 +136,21 @@ final class PhoneBookViewController: BaseViewController {
                 title: "적용",
                 style: .done,
                 target: self,
-                action: #selector(rightBarButtonDidTap))
+                action: #selector(addModeRightBarButtonDidTap))
+        case .edit:
+            navigationItem.title = "연락처 편집"
+            navigationItem.rightBarButtonItem = UIBarButtonItem(
+                title: "적용",
+                style: .done,
+                target: self,
+                action: #selector(editModeRightBarButtonDidTap))
         case .default:
             navigationItem.title = "\(model.name)"
+            navigationItem.rightBarButtonItem = UIBarButtonItem(
+                title: "수정",
+                style: .done,
+                target: self,
+                action: #selector(defaultModeRightBarButtonDidTap))
         }
     }
     
@@ -138,7 +183,8 @@ final class PhoneBookViewController: BaseViewController {
     }
     
     // MARK: Event handling method.
-    @objc private func rightBarButtonDidTap() {
+    @objc private func addModeRightBarButtonDidTap() {
+        
         if nameInputView.textField.text!.isEmpty || phoneNumberInputView.textField.text!.isEmpty {
             showAlert(title: "알림", message: "필수사항을 입력해주세요.")
         } else {
@@ -146,6 +192,22 @@ final class PhoneBookViewController: BaseViewController {
             modelDataChange?()
             navigationController?.popViewController(animated: true)
         }
+    }
+    
+    @objc private func editModeRightBarButtonDidTap() {
+        print("수정 완료")
+    }
+    
+    @objc private func defaultModeRightBarButtonDidTap() {
+        guard let navigationController = navigationController else { return }
+        
+        let editModeVC = PhoneBookViewController()
+        editModeVC.mode = .edit
+        editModeVC.model = model
+        editModeVC.nameInputView.textField.becomeFirstResponder()
+        
+        navigationController.popViewController(animated: false)
+        navigationController.pushViewController(editModeVC, animated: false)
     }
 }
 
