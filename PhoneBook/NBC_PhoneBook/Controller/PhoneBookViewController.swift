@@ -105,7 +105,7 @@ final class PhoneBookViewController: BaseViewController {
                 target: self,
                 action: #selector(rightBarButtonDidTap))
         case .default:
-            navigationItem.title = "연락처"
+            navigationItem.title = "\(model.name)"
         }
     }
     
@@ -117,6 +117,11 @@ final class PhoneBookViewController: BaseViewController {
         [profileImageView, inputStackView].forEach { contentStackView.addArrangedSubview($0) }
         
         [nameInputView, phoneNumberInputView].forEach { inputStackView.addArrangedSubview($0) }
+        
+        if mode == .default,
+           let nameInputView = inputStackView.arrangedSubviews.first as? CustomTextInputView {
+            nameInputView.isHidden = true
+        }
     }
     
     override func setupConstraints() {
