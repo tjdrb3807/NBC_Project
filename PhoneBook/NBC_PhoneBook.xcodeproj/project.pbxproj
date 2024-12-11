@@ -25,11 +25,6 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		45C01D2A2D06D652000C4D80 /* View */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = View;
-			sourceTree = "<group>";
-		};
 		45C01D2B2D06D65C000C4D80 /* Controller */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = Controller;
@@ -74,14 +69,13 @@
 		45C01D222D06D5B4000C4D80 /* NBC_PhoneBook */ = {
 			isa = PBXGroup;
 			children = (
-				45C01D2C2D06D663000C4D80 /* Model */,
-				45C01D2B2D06D65C000C4D80 /* Controller */,
-				45C01D2A2D06D652000C4D80 /* View */,
 				45C01D1B2D06D5B4000C4D80 /* Info.plist */,
 				45C01D192D06D5B4000C4D80 /* AppDelegate.swift */,
 				45C01D212D06D5B4000C4D80 /* SceneDelegate.swift */,
-				45C01D1A2D06D5B4000C4D80 /* Assets.xcassets */,
 				45C01D1D2D06D5B4000C4D80 /* LaunchScreen.storyboard */,
+				45C01D1A2D06D5B4000C4D80 /* Assets.xcassets */,
+				45C01D2C2D06D663000C4D80 /* Model */,
+				45C01D2B2D06D65C000C4D80 /* Controller */,
 			);
 			path = NBC_PhoneBook;
 			sourceTree = "<group>";
@@ -102,7 +96,6 @@
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
-				45C01D2A2D06D652000C4D80 /* View */,
 				45C01D2B2D06D65C000C4D80 /* Controller */,
 				45C01D2C2D06D663000C4D80 /* Model */,
 			);
