@@ -39,6 +39,15 @@ final class PhoneBookTableViewCell: BaseTableViewCell {
         return label
     }()
     
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        
+        nameLabel.text = nil
+        phoneNumberLabel.text = nil
+        profileImageView.kf.cancelDownloadTask()
+        profileImageView.image = nil            
+    }
+    
     override func configureUI() {
         super.configureUI()
         
