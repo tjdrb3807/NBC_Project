@@ -10,13 +10,13 @@ import SnapKit
 import Kingfisher
 
 protocol ProfileImageViewDelegate: AnyObject {
-    func fetchRandomImageURL(completion: @escaping (URL?) -> Void)
+    func updateProfileImage()
 }
 
 final class ProfileImageView: UIStackView {
     weak var delegate: ProfileImageViewDelegate?
     
-    private let imageView: UIImageView = {
+    let imageView: UIImageView = {
         let imageView = UIImageView()
         
         imageView.layer.cornerRadius = 180.0 / 2
@@ -50,6 +50,14 @@ final class ProfileImageView: UIStackView {
         fatalError("init(coder:) has not been implemented")
     }
     
+    func updateProfileImage(with url: URL) {
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self else { return }
+            
+            imageView.kf.setImage(with: url)
+        }
+    }
+    
     private func configureUI() {
         axis = .vertical
         alignment = .center
@@ -64,13 +72,7 @@ final class ProfileImageView: UIStackView {
     }
     
     @objc private func randomInageFetchButtonDidTap() {
-        delegate?.fetchRandomImageURL { imageURL in
-            DispatchQueue.main.async { [weak self] in
-                guard let self = self else { return }
-                
-                self.imageView.kf.setImage(with: imageURL)
-            }
-        }
+        delegate?.updateProfileImage()
     }
 }
 

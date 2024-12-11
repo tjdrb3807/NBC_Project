@@ -7,6 +7,7 @@
 
 import UIKit
 import SnapKit
+import Kingfisher
 
 final class PhoneBookTableViewCell: BaseTableViewCell {
     static let identifier = "PhoneBookTableViewCell"
@@ -60,6 +61,12 @@ final class PhoneBookTableViewCell: BaseTableViewCell {
             $0.trailing.equalToSuperview().inset(20.0)
             $0.centerY.equalTo(profileImageView.snp.centerY)
         }
+    }
+    
+    func updateUI(name: String, phoneNumber: String, profileImageURL: URL?) {
+        self.nameLabel.text = name
+        self.phoneNumberLabel.text = phoneNumber
+        self.profileImageView.kf.setImage(with: profileImageURL)
     }
 }
 

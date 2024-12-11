@@ -19,6 +19,7 @@ class BaseViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        self.bindModel()
         self.configureNavigationBar()
         self.configureUI()
         self.setupConstraints()
@@ -26,6 +27,10 @@ class BaseViewController: UIViewController {
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
         tapGesture.cancelsTouchesInView = false  // TODO: TIL 작성
         view.addGestureRecognizer(tapGesture)
+    }
+    
+    func bindModel() {
+        // Override Code..
     }
     
     func configureNavigationBar() {
@@ -52,4 +57,13 @@ class BaseViewController: UIViewController {
     }
     
     @objc private func dismissKeyboard() { view.endEditing(true) }
+}
+
+extension BaseViewController {
+    func showAlert(title: String, message: String) {
+        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "확인", style: .default))
+        
+        present(alert, animated: true)
+    }
 }

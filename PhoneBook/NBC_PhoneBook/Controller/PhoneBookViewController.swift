@@ -14,8 +14,12 @@ enum PhoneBookVCMode {
 }
 
 final class PhoneBookViewController: BaseViewController {
-    var mode: PhoneBookVCMode?
+    var mode: PhoneBookVCMode!
+    var model: ContactInfo!
     
+    var modelDataChange: (() -> Void)?
+    
+    // MARK: Subviews
     private let contentStackView: UIStackView = {
         let stackView = UIStackView()
         stackView.axis = .vertical
@@ -30,7 +34,7 @@ final class PhoneBookViewController: BaseViewController {
         let view = ProfileImageView()
         if mode == .default {
             view.randomImageFetchButton.isHidden = true
-            
+            view.imageView.kf.setImage(with: model.profileImageURL)
             return view
         } else {
             view.delegate = self
@@ -54,9 +58,11 @@ final class PhoneBookViewController: BaseViewController {
         
         if mode == .default {
             view.textField.isEnabled = false
+            view.textField.text = model.name
             return view
         } else {
             view.textField.delegate = self
+            view.delegate = self
         }
         
         return view
@@ -66,13 +72,24 @@ final class PhoneBookViewController: BaseViewController {
         let view = CustomTextInputView(type: .phoneNumber)
         if mode == .default {
             view.textField.isEnabled = false
+            view.textField.text = model.phoneNumber
             return view
         } else {
             view.textField.delegate = self
+            view.delegate = self
         }
         
         return view
     }()
+    
+    // MARK: Override method.
+    override func bindModel() {
+        model.profileImageURLDidChange = { [weak self] in
+            guard let self = self else { return }
+            
+            profileImageView.updateProfileImage(with: $0)
+        }
+    }
     
     override func configureNavigationBar() {
         super.configureNavigationBar()
@@ -115,20 +132,15 @@ final class PhoneBookViewController: BaseViewController {
         phoneNumberInputView.snp.makeConstraints { $0.height.equalTo(70.0) }
     }
     
+    // MARK: Event handling method.
     @objc private func rightBarButtonDidTap() {
         if nameInputView.textField.text!.isEmpty || phoneNumberInputView.textField.text!.isEmpty {
-            showAlert()
+            showAlert(title: "알림", message: "필수사항을 입력해주세요.")
         } else {
-            // TODO: 데이터 추가 로직
+            model.addData(model)
+            modelDataChange?()
             navigationController?.popViewController(animated: true)
         }
-    }
-    
-    private func showAlert() {
-        let alert = UIAlertController(title: "알림", message: "필수항목을 입력해주세요.", preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "확인", style: .default))
-        
-        present(alert, animated: true)
     }
 }
 
@@ -145,24 +157,21 @@ extension PhoneBookViewController: UITextFieldDelegate {
 }
 
 extension PhoneBookViewController: ProfileImageViewDelegate {
-    func fetchRandomImageURL(completion: @escaping (URL?) -> Void) {
-        let randomNumber = Int.random(in: 1...1000)
-        guard let url = URL(string: "https://pokeapi.co/api/v2/pokemon/\(randomNumber)") else { return completion(nil) }
-        
-        URLSession.shared.dataTask(with: url) { data, response, error in
-            guard let data = data,
-                  error == nil else { return completion(nil) }
-            
-            if let response = response as? HTTPURLResponse,
-               (200..<300).contains(response.statusCode) {
-                guard let decodedData = try? JSONDecoder().decode(RandomImageResponseDTO.self, from: data) else { return completion(nil) }
-                
-                completion(decodedData.image.url)
-                return
-            }
-        }.resume()
+    func updateProfileImage() {
+        model.fetchRandomProfileImageURL(with: "https://pokeapi.co/api/v2/pokemon/")
     }
 }
+
+extension PhoneBookViewController: CustomTextInputViewDelegate {
+    func updateTextData(_ textField: UITextField, value: String) {
+        if textField == nameInputView.textField {
+            model.updateName(value)
+        } else if textField == phoneNumberInputView.textField {
+            model.updatePhoneNumber(value)
+        }
+    }
+}
+
 
 #if DEBUG
 
@@ -175,7 +184,10 @@ struct PhoneBookViewController_Previews: PreviewProvider {
     
     struct PhoneBookViewController_Presentable: UIViewControllerRepresentable {
         func makeUIViewController(context: Context) -> some UIViewController {
-            UINavigationController(rootViewController: PhoneBookViewController())
+            let vc = PhoneBookViewController()
+            vc.mode = .add
+            
+            return UINavigationController(rootViewController: vc)
         }
         
         func updateUIViewController(_ uiViewController: UIViewControllerType, context: Context) { }

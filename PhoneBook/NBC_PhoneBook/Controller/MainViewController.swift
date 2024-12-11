@@ -9,6 +9,8 @@ import UIKit
 import SnapKit
 
 final class MainViewController: BaseViewController {
+    var model = PhoneBook()
+    
     private lazy var phoneBookTableView: UITableView = {
         let tableView = UITableView()
         tableView.separatorStyle = .none
@@ -21,6 +23,15 @@ final class MainViewController: BaseViewController {
         
         return tableView
     }()
+    
+    override func bindModel() {
+        model.fetchAllData()
+        model.listDidChange = { [weak self] in
+            guard let self = self else { return }
+            
+            phoneBookTableView.reloadData()
+        }
+    }
     
     override func configureNavigationBar() {
         super.configureNavigationBar()
@@ -48,7 +59,13 @@ final class MainViewController: BaseViewController {
     
     @objc private func rightBarButtonDidTap() {
         let phoneBookVC = PhoneBookViewController()
+        phoneBookVC.modelDataChange = { [weak self] in
+            guard let self = self else { return }
+            
+            model.fetchAllData()
+        }
         phoneBookVC.mode = .add
+        phoneBookVC.model = ContactInfo()
         
         navigationController?.pushViewController(phoneBookVC, animated: true)
     }
@@ -56,23 +73,28 @@ final class MainViewController: BaseViewController {
 
 extension MainViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-//        if model.list.isEmpty {
-//            let noDataLabel = UILabel()
-//            noDataLabel.text = "No Data"
-//            noDataLabel.textAlignment = .center
-//            tableView.backgroundView = noDataLabel
-//            return 0
-//        } else {
-//            tableView.backgroundView = nil
-//            return model.list.count
-//        }
-        1
+        if model.list.isEmpty {
+            let noDataLabel = UILabel()
+            noDataLabel.text = "No Data"
+            noDataLabel.textAlignment = .center
+            tableView.backgroundView = noDataLabel
+            return 0
+        } else {
+            tableView.backgroundView = nil
+            return model.list.count
+        }
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(
             withIdentifier: PhoneBookTableViewCell.identifier,
             for: indexPath) as? PhoneBookTableViewCell else { return UITableViewCell() }
+        
+        let data = model.list[indexPath.row]
+        cell.updateUI(
+            name: data.name,
+            phoneNumber: data.phoneNumber,
+            profileImageURL: data.profileImageURL)
         
         return cell
     }
@@ -83,7 +105,13 @@ extension MainViewController: UITableViewDataSource, UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let phoneBookVC = PhoneBookViewController()
+        let data = model.list[indexPath.row]
+        
         phoneBookVC.mode = .default
+        phoneBookVC.model = ContactInfo(
+            name: data.name,
+            phoneNumber: data.phoneNumber,
+            profileImageURL: data.profileImageURL)
         
         navigationController?.pushViewController(phoneBookVC, animated: true)
         tableView.deselectRow(at: indexPath, animated: true)

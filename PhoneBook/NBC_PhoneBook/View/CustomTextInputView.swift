@@ -13,23 +13,29 @@ enum InputType: String {
     case phoneNumber = "휴대폰번호"
 }
 
+protocol CustomTextInputViewDelegate: AnyObject {
+    func updateTextData(_ textField: UITextField, value: String)
+}
+
 final class CustomTextInputView: UIStackView {
+    weak var delegate: CustomTextInputViewDelegate?
     var type: InputType
     
-    private lazy var titleLabel: UILabel = { [weak self] in
-        guard let self = self else { return UILabel() }
-        
+    private lazy var titleLabel: UILabel = {
         let label = UILabel()
-        label.text = "\(type.rawValue) (필수)"
+        let text = "\(type.rawValue) (필수)"
+        let attributedString = NSMutableAttributedString(string: text)
+        let range = (text as NSString).range(of: "(필수)")
+        
+        attributedString.addAttribute(.foregroundColor, value: UIColor.red, range: range)
+        label.attributedText = attributedString
         label.font = .systemFont(ofSize: 12.0, weight: .light)
         label.numberOfLines = 1
-        
+
         return label
     }()
     
-    lazy var textField: UITextField = { [weak self] in
-        guard let self = self else { return UITextField() }
-        
+    lazy var textField: UITextField = {
         let textField = UITextField()
         switch type {
         case .name:
@@ -48,6 +54,11 @@ final class CustomTextInputView: UIStackView {
         let spacing = UIView(frame: .init(x: 0.0, y: 0.0, width: 10.0, height: textField.frame.height))
         textField.leftView = spacing
         textField.leftViewMode = .always
+        
+        textField.addTarget(
+            self,
+            action: #selector(textFieldEditingChanged),
+            for: .editingChanged)
         
         return textField
     }()
@@ -70,6 +81,10 @@ final class CustomTextInputView: UIStackView {
         spacing = 5.0
         
         [titleLabel, textField].forEach { addArrangedSubview($0) }
+    }
+    
+    @objc private func textFieldEditingChanged() {
+        delegate?.updateTextData(self.textField, value: textField.text!)
     }
 }
 
