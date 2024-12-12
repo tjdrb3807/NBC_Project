@@ -266,7 +266,8 @@ final class PhoneBookViewController: BaseViewController {
     }
     
     private func presentDefaultPhoneBookVC() {
-        guard let model = model else { return }
+        guard let navigationController = navigationController,
+              let model = model else { return }
         
         let defaultModeVC = PhoneBookViewController()
         let newModel = ContactInfo(
@@ -277,8 +278,8 @@ final class PhoneBookViewController: BaseViewController {
         defaultModeVC.mode = .default
         defaultModeVC.model = newModel
         
-        navigationController?.popViewController(animated: false)
-        navigationController?.pushViewController(defaultModeVC, animated: false)
+        navigationController.popViewController(animated: false)
+        navigationController.pushViewController(defaultModeVC, animated: false)
     }
 }
 
