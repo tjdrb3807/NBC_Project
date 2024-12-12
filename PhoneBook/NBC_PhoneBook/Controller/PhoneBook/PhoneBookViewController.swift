@@ -277,7 +277,8 @@ extension PhoneBookViewController: UITextFieldDelegate {
 
 extension PhoneBookViewController: ProfileImageViewDelegate {
     func updateProfileImage() {
-        model.fetchRandomProfileImageURL(with: "https://pokeapi.co/api/v2/pokemon/")
+//        model.fetchRandomImageURLWithURLSession()
+        model.fetchRandomImageURLWithAlamo()
     }
 }
 

@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Alamofire
 
 class ContactInfo {
     private let userDefaultsKey = "ContactInfoList"
@@ -71,20 +72,44 @@ class ContactInfo {
     }
 }
 
+// MARK: Network
 extension ContactInfo {
-    func fetchRandomProfileImageURL(with urlString: String) {
-        guard let url = URL(string: "\(urlString)\(Int.random(in: 1...1000))") else { return }
+//    func fetchRandomImageURLWithURLSession() {
+//        guard let url = URL(string: "https://pokeapi.co/api/v2/pokemon/\(Int.random(in: 1...1000))") else { return }
+//
+//        URLSession.shared.dataTask(with: url) { [weak self] data, response, error in
+//            guard let self = self, let data = data, error == nil else { return }
+//
+//            if let response = response as? HTTPURLResponse, (200..<300).contains(response.statusCode) {
+//                guard let decodedData = try? JSONDecoder().decode(RandomImageResponseDTO.self, from: data) else { return }
+//
+//                profileImageURL = decodedData.image.url
+//                profileImageURLDidChange?(decodedData.image.url)
+//            }
+//        }.resume()
+//    }
+    
+    func fetchRandomImageURLWithAlamo() {
+        guard let url = URL(string: "https://pokeapi.co/api/v2/pokemon/\(Int.random(in: 1...1000))") else { return }
         
-        URLSession.shared.dataTask(with: url) { [weak self] data, response, error in
-            guard let self = self, let data = data, error == nil else { return }
+        AF.request(
+            url,
+            method: .get,
+            parameters: nil,
+            encoding: URLEncoding.default,
+            headers: ["Content-Type": "application/json", "Accept": "application/json"])
+        .validate(statusCode: 200..<300)
+        .responseDecodable(of: RandomImageResponseDTO.self) { [weak self] response in
+            guard let self = self else { return }
             
-            if let response = response as? HTTPURLResponse, (200..<300).contains(response.statusCode) {
-                guard let decodedData = try? JSONDecoder().decode(RandomImageResponseDTO.self, from: data) else { return }
-                
-                profileImageURL = decodedData.image.url
-                profileImageURLDidChange?(decodedData.image.url)
+            switch response.result {
+            case .success(let responseDTO):
+                profileImageURL = responseDTO.image.url
+                profileImageURLDidChange?(responseDTO.image.url)
+            case .failure(let error):
+                debugPrint(error)
             }
-        }.resume()
+        }
     }
 }
 
