@@ -70,6 +70,7 @@ final class PhoneBookViewController: BaseViewController {
             view.delegate = self
         case .edit:
             view.textField.text = model.name
+            view.textField.delegate = self
             view.delegate = self
         case .default:
             view.textField.text = model.name
@@ -267,8 +268,6 @@ extension PhoneBookViewController: UITextFieldDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         if textField === nameInputView.textField {
             phoneNumberInputView.textField.becomeFirstResponder()
-        } else if textField === phoneNumberInputView.textField {
-            phoneNumberInputView.textField.resignFirstResponder()
         }
         
         return true
