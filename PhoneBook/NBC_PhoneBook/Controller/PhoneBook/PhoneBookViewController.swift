@@ -152,6 +152,7 @@ final class PhoneBookViewController: BaseViewController {
         
         [nameInputView, phoneNumberInputView].forEach { inputStackView.addArrangedSubview($0) }
         
+        // default 상태에서는 이미지 생성 버튼 숨김
         if mode == .default,
            let nameInputView = inputStackView.arrangedSubviews.first as? CustomTextInputView {
             nameInputView.isHidden = true
@@ -172,8 +173,16 @@ final class PhoneBookViewController: BaseViewController {
     }
     
     // MARK: Event handling method.
+    /// PhoneBookVCMode == .add 상태의 navigatioBar.rightBarButton 탭했을 떄 호출
+    ///
+    /// 필수입력란이 공란상태일때 저장버튼을 눌렀을 경우
+    ///
+    ///     - 알럿
+    /// 필수입력한을 채운 후 저장버튼을 눌렀을 경우
+    ///
+    ///     - 데이터 저장
+    ///     - 데이터 변경 내역 MainViewController에 알림
     @objc private func addModeRightBarButtonDidTap() {
-        
         if nameInputView.textField.text!.isEmpty || phoneNumberInputView.textField.text!.isEmpty {
             showAlert(title: "알림", message: "필수사항을 입력해주세요.")
         } else {
@@ -183,25 +192,17 @@ final class PhoneBookViewController: BaseViewController {
         }
     }
     
+    /// PhoneBookVCMode == .edit 상태의 navigatioBar.leftBarButton 탭했을 떄 호출
+    ///
+    /// 변경내역이 없을 경우 PhoneBookVCMode를 default로 전환
+    ///
+    /// 변경내역이 있을 경우 알럿으로 사용자에게 확인 플로우 진행
     @objc private func editModeLeftBarButtonDidTap() {
         if model.name == model.beforeName &&
             model.phoneNumber == model.beforePhoneNumber &&
             model.profileImageURL == model.beforeProfileImgaeURL {
             
-            guard let navigationController = navigationController,
-                  let model = model else { return }
-            
-            let defaultModeVC = PhoneBookViewController()
-            let newModel = ContactInfo(
-                name: model.beforeName,
-                phoneNumber: model.beforeName,
-                profileImageURL: model.beforeProfileImgaeURL)
-            
-            defaultModeVC.mode = .default
-            defaultModeVC.model = newModel
-            
-            navigationController.popViewController(animated: false)
-            navigationController.pushViewController(defaultModeVC, animated: false)
+            presentDefaultPhoneBookVC()
         } else {
             let alert = UIAlertController(
                 title: "수정을 취소하시겠습니까?",
@@ -215,27 +216,21 @@ final class PhoneBookViewController: BaseViewController {
                 title: "확인",
                 style: .default,
                 handler: { [weak self] _ in
-                    guard let self = self,
-                          let navigationController = navigationController,
-                          let model = model else { return }
-                    
-                    let defaultModeVC = PhoneBookViewController()
-                    let newModel = ContactInfo(
-                        name: model.beforeName,
-                        phoneNumber: model.beforeName,
-                        profileImageURL: model.beforeProfileImgaeURL)
-                    
-                    defaultModeVC.mode = .default
-                    defaultModeVC.model = newModel
-                    
-                    navigationController.popViewController(animated: false)
-                    navigationController.pushViewController(defaultModeVC, animated: false)
+                    guard let self = self else { return }
+                    presentDefaultPhoneBookVC()
                 }))
             
             present(alert, animated: true)
         }
     }
     
+    /// PhoneBookVCMode == .edit 상태의 navigationBar.leftBarButton 탭했을 떄 호출
+    ///
+    /// 업데이트 로직 실행
+    ///
+    /// MainViewController에 데이터 변경내역 알림
+    ///
+    /// popViewController
     @objc private func editModeRightBarButtonDidTap() {
         guard let navigationController = navigationController,
               let mainVC = navigationController.viewControllers.first as? MainViewController else { return }
@@ -246,6 +241,13 @@ final class PhoneBookViewController: BaseViewController {
         navigationController.popViewController(animated: true)
     }
     
+    /// PhoneBookVCMode == .default 상태의 navigatioBar.RightBarButton 탭했을 때 호출
+    ///
+    /// 현재 model에 저장된 데이터와 새롭게 저장될 데이터를 비교하기 위해 새로운 model 객체 생성
+    ///
+    /// 새로운 PhoneBookViewController 객체 생성 후 mode == .edit, model 설정
+    ///
+    /// 화면을 전환하기위해 pop, push 전환(사용자에게 화면전환을 느낄 수 없도록 animated: false)
     @objc private func defaultModeRightBarButtonDidTap() {
         guard let navigationController = navigationController, let model = model else { return }
         
@@ -262,13 +264,28 @@ final class PhoneBookViewController: BaseViewController {
         navigationController.popViewController(animated: false)
         navigationController.pushViewController(editModeVC, animated: false)
     }
+    
+    private func presentDefaultPhoneBookVC() {
+        guard let model = model else { return }
+        
+        let defaultModeVC = PhoneBookViewController()
+        let newModel = ContactInfo(
+            name: model.beforeName,
+            phoneNumber: model.beforeName,
+            profileImageURL: model.beforeProfileImgaeURL)
+        
+        defaultModeVC.mode = .default
+        defaultModeVC.model = newModel
+        
+        navigationController?.popViewController(animated: false)
+        navigationController?.pushViewController(defaultModeVC, animated: false)
+    }
 }
 
 extension PhoneBookViewController: UITextFieldDelegate {
+    
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        if textField === nameInputView.textField {
-            phoneNumberInputView.textField.becomeFirstResponder()
-        }
+        if textField === nameInputView.textField { phoneNumberInputView.textField.becomeFirstResponder() }
         
         return true
     }
@@ -305,6 +322,7 @@ struct PhoneBookViewController_Previews: PreviewProvider {
         func makeUIViewController(context: Context) -> some UIViewController {
             let vc = PhoneBookViewController()
             vc.mode = .add
+            vc.model = ContactInfo()
             
             return UINavigationController(rootViewController: vc)
         }

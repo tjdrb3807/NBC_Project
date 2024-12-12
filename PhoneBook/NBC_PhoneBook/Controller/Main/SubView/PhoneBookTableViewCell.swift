@@ -14,11 +14,11 @@ final class PhoneBookTableViewCell: BaseTableViewCell {
     
     private let profileImageView: UIImageView = {
         let imageView = UIImageView()
-        imageView.backgroundColor = .lightGray
         imageView.contentMode = .scaleAspectFit
         imageView.clipsToBounds = true
         
         imageView.layer.cornerRadius = 70.0 / 2
+        imageView.layer.borderWidth = 1.0
         
         return imageView
     }()
