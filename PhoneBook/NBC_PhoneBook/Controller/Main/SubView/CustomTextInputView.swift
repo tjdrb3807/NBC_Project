@@ -50,6 +50,8 @@ final class CustomTextInputView: UIStackView {
         textField.layer.borderWidth = 1.0
         textField.layer.borderColor = UIColor.lightGray.cgColor
         textField.layer.cornerRadius = 12.0
+        textField.autocorrectionType = .no
+        textField.spellCheckingType = .no
         
         let spacing = UIView(frame: .init(x: 0.0, y: 0.0, width: 10.0, height: textField.frame.height))
         textField.leftView = spacing
