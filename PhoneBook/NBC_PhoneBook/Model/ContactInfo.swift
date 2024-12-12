@@ -64,7 +64,7 @@ class ContactInfo {
         var contacts = loadData()
         let dto = model.toDTO()
         
-        if let index = contacts.firstIndex(where: { $0.phoneNumber == dto.phoneNumber }) {
+        if let index = contacts.firstIndex(where: { $0.phoneNumber == model.beforePhoneNumber }) {
             contacts[index] = dto
         }
         
